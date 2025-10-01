@@ -12,6 +12,7 @@ import { LinearGradient } from "expo-linear-gradient";
 import { FontAwesome } from "@expo/vector-icons";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../src/config/firebaseConfig";
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 
 export default function Login({ navigation }) {
   const [email, setEmail] = useState("");
@@ -47,6 +48,11 @@ export default function Login({ navigation }) {
   };
 
   return (
+    <KeyboardAwareScrollView
+        contentContainerStyle={{ flexGrow: 1 }}
+        enableOnAndroid={true}
+        extraScrollHeight={20}
+      >
     <View style={styles.root}>
       {/* Imagen odontológica arriba con degradado superpuesto */}
         <View style={styles.headerImageContainer}>
@@ -95,9 +101,11 @@ export default function Login({ navigation }) {
               onChangeText={setPassword}
               secureTextEntry={!showPassword}
             />
+            
             <TouchableOpacity
               onPress={() => setShowPassword(!showPassword)}
               style={styles.eyeButton}
+              
             >
               <FontAwesome
                 name={showPassword ? "eye-slash" : "eye"}
@@ -106,20 +114,24 @@ export default function Login({ navigation }) {
               />
             </TouchableOpacity>
           </View>
+          <TouchableOpacity>
+            <Text style={styles.forgotText}>¿Olvidó su contraseña?</Text>
+          </TouchableOpacity>
           <TouchableOpacity style={styles.button} onPress={handleLogin}>
             <Text style={styles.buttonText}>INGRESAR</Text>
           </TouchableOpacity>
           <TouchableOpacity onPress={() => navigation.navigate("SignUp")}>
             <Text style={styles.signUpText}>
-              ¿No tienes cuenta aún? Regístrate
+              ¿No tienes cuenta aún?{" "}
+              <Text style={styles.signUpLink} onPress={() => navigation.navigate("SignUp")}>
+                Regístrate
+              </Text>
             </Text>
-          </TouchableOpacity>
-          <TouchableOpacity>
-            <Text style={styles.forgotText}>¿Olvidó su contraseña?</Text>
           </TouchableOpacity>
         </View>
       </LinearGradient>
     </View>
+    </KeyboardAwareScrollView>
   );
 }
 
@@ -132,7 +144,7 @@ const styles = StyleSheet.create({
   },
   root: {
     flex: 1,
-    backgroundColor: "#fff",
+    backgroundColor: "#ffffffff",
   },
   headerImage: {
     width: '100%',
@@ -149,7 +161,6 @@ const styles = StyleSheet.create({
     maxWidth: 400,
     backgroundColor: "#ffffffff",
     borderRadius: 8,
-    borderRadiusColor: "#5a2020ff",
     padding: 20,
     elevation: 4,
   },
@@ -165,11 +176,15 @@ const styles = StyleSheet.create({
     height: 100,
     alignSelf: "center",
     marginBottom: 16,
+    borderColor: "#4ae4c2d6",
+    borderWidth: 4,
+    borderRadius: 50,
+    padding: 0,
   },
   label: {
     fontSize: 14,
     fontWeight: "bold",
-    color: "#333",
+    color: "#474242ff",
     marginBottom: 5,
   },
   inputGroup: {
@@ -192,7 +207,7 @@ const styles = StyleSheet.create({
     padding: 5,
   },
   button: {
-    backgroundColor: "#05f7c2",
+    backgroundColor: "#57ebcbff",
     paddingVertical: 12,
     borderRadius: 25,
     alignItems: "center",
@@ -205,12 +220,18 @@ const styles = StyleSheet.create({
   },
   signUpText: {
     marginTop: 20,
-    color: "#fff",
+    color: "#253632ff",
     textAlign: "center",
   },
+  signUpLink: {
+  color: "#2cc69dff",
+  fontWeight: "bold",
+  textDecorationLine: "underline",
+},
   forgotText: {
-    marginTop: 10,
-    color: "#fff",
-    textAlign: "center",
+    marginTop: 0,
+    marginBottom: 18, 
+    color: "#252e29ff",
+    textAlign: "right",
   },
 });
