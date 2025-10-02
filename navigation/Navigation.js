@@ -26,10 +26,25 @@ function Navigation() {
 
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName={isAuthenticated ? "Home" : "Login"}>
-        <Stack.Screen name="Login" component={Login} />
-        <Stack.Screen name="SignUp" component={SignUp} />
-        <Stack.Screen name="Home" component={Home} />
+      <Stack.Navigator screenOptions={{ headerShown: false }}>
+        {isAuthenticated ? (
+          // === ESTADO AUTENTICADO: MUESTRA LA APLICACIÓN PRINCIPAL ===
+          // Renderiza el AppTabs, que contiene el Bottom Tab Navigator.
+          // Cualquier navegación dentro de AppTabs tendrá el menú inferior.
+          <>
+            <Stack.Screen name="App" component={AppTabs} />
+            <Stack.Screen name="NuevoPaciente" component={NuevoPaciente} />
+          </>
+        ) : (
+          // === ESTADO NO AUTENTICADO: MUESTRA EL STACK DE AUTENTICACIÓN ===
+          // Estas pantallas NO tendrán el menú inferior.
+          <>
+            <Stack.Screen name="Login" component={Login} />
+            <Stack.Screen name="SignUp" component={SignUp} />
+            <Stack.Screen name="Home" component={Home} />
+            {/* <Stack.Screen name="NuevoPaciente" component={NuevoPaciente} /> */}
+          </>
+        )}
       </Stack.Navigator>
     </NavigationContainer>
   );

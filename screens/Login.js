@@ -6,22 +6,33 @@ import {
   TouchableOpacity,
   StyleSheet,
   Image,
-  Alert,
 } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { FontAwesome } from "@expo/vector-icons";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../src/config/firebaseConfig";
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
+import ComponentAlert from "./ComponentAlert";
 
 export default function Login({ navigation }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
 
+  //Estados para la alerta personalizada
+  const [alertVisible, setAlertVisible ] = useState(false);
+  const [alertTitulo, setAlertTitulo ] = useState("");
+  const [alertMensaje, setAlertMensaje ] = useState("");
+  const [alertType, setAlertType ] = useState("info"); // "info", "error", "success"
+
   const handleLogin = async () => {
     if (!email || !password) {
-      Alert.alert("Error", "Por favor ingrese ambos campos.");
+      //Se muestra la alerta personalizada,remplazando al Alert.alert antes usado
+      //Alert.alert("Error", "Todos los campos son obligatorios.");
+      setAlertTitulo("Error");
+      setAlertMensaje("Todos los campos son obligatorios.");
+      setAlertType("error");
+      setAlertVisible(true);
       return;
     }
     try {
@@ -43,11 +54,25 @@ export default function Login({ navigation }) {
         default:
           errorMessage = error.message;
       }
-      Alert.alert("Error", errorMessage);
+      //Se muestra la alerta personalizada,remplazando al Alert.alert antes usado
+      //Alert.alert("Error", errorMessage);
+      setAlertTitulo("Error");
+      setAlertMensaje(errorMessage);
+      setAlertType("error");
+      setAlertVisible(true);
+     
     }
   };
 
   return (
+    <>
+      <ComponentAlert
+        visible={alertVisible} // Controla la visibilidad del modal, si es true se muestra y si es false se oculta
+        titulo={alertTitulo} // Título de la alerta, ejemplo: "Error", "Éxito"
+        mensaje={alertMensaje} // Mensaje de la alerta, es el texto que quieres mostrar, ejemplo: "El usuario o contraseña es incorrecto."
+        type={alertType} // Tipo de alerta, puede ser "info", "error", "success" para diferentes estilos
+        onClose={() => setAlertVisible(false)} // Función que se llama cuando se cierra la alerta
+      />
     <KeyboardAwareScrollView
         contentContainerStyle={{ flexGrow: 1 }}
         enableOnAndroid={true}
@@ -132,6 +157,7 @@ export default function Login({ navigation }) {
       </LinearGradient>
     </View>
     </KeyboardAwareScrollView>
+    </>
   );
 }
 
@@ -165,7 +191,7 @@ const styles = StyleSheet.create({
     elevation: 4,
   },
   title: {
-    fontSize: 24,
+    fontSize: 35,
     fontWeight: "bold",
     color: "#222",
     marginBottom: 16,
@@ -179,7 +205,7 @@ const styles = StyleSheet.create({
     borderColor: "#4ae4c2d6",
     borderWidth: 4,
     borderRadius: 50,
-    padding: 0,
+    padding: 40,
   },
   label: {
     fontSize: 14,
@@ -212,6 +238,8 @@ const styles = StyleSheet.create({
     borderRadius: 25,
     alignItems: "center",
     marginTop: 10,
+    width: '60%',
+    alignSelf: "center",
   },
   buttonText: {
     color: "#000",
@@ -220,18 +248,19 @@ const styles = StyleSheet.create({
   },
   signUpText: {
     marginTop: 20,
-    color: "#253632ff",
+    color: "#2cc69dff",
     textAlign: "center",
   },
   signUpLink: {
   color: "#2cc69dff",
   fontWeight: "bold",
-  textDecorationLine: "underline",
 },
   forgotText: {
     marginTop: 0,
-    marginBottom: 18, 
+    marginBottom: 28, 
     color: "#252e29ff",
     textAlign: "right",
+    fontSize: 12,
+    
   },
 });
